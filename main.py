@@ -16,36 +16,43 @@ def clear():
 
 score = 0
 
+def get_account_info(random_obj):
+  """Destructures an object and returns a string of information."""
+  n, _, d, c = random_obj 
+  return f"{random_obj[n]}, a {random_obj[d]}, and from {random_obj[c]}."
+
+
+def check_answer(guess, followers_A, followers_B):
+  """Takes in user guess, followers count for A and B. Returns boolean."""
+  if followers_A > followers_B:
+    return guess == 'a'
+  else:
+    return guess == 'b'
+
+
 def start_game(score, random_A = choice(data), random_B = choice(data)):
+  """Code base for higher-lower game."""
   clear()
   print(logo)
   if score > 0:
-    print(f"Correct. Your score: {score}")
+    print(f"Correct. Your score: {score}\n")
 
-  # Compare A: 'Name', 'Description', and from 'Country'
-  # Destructuring
-  n, fc, d, c = random_A 
-  followers_A = random_A[fc]
-  print(f"Compare A: {random_A[n]}, a {random_A[d]}, and from {random_A[c]}.")
-
-  print(vs)
-
-  # Compare B: 'Name', 'Description', and from 'Country'
   # Ensures random A and B are different
   while random_B == random_A:
     random_B = choice(data)
 
-  n, fc, d, c = random_B 
-  followers_B = random_B[fc]
-  print(f"Compare B: {random_B[n]}, a {random_B[d]}, and from {random_B[c]}.\n")
+  # Compare A and B: 'Name', 'Description', and from 'Country'
+  print(f"Compare A: {get_account_info(random_A)}.")
+  print(vs)
+  print(f"Against B: {get_account_info(random_B)}.\n")
 
   guess = input('Who has more followers? Type "A"  or "B"?: ').lower()
 
-  is_A_greater_than_B = followers_A > followers_B
-  if guess == 'a' and is_A_greater_than_B == True:
-    score += 1
-    start_game(score, random_B, choice(data))
-  elif guess == 'b' and is_A_greater_than_B == False:
+  followers_A = random_A['follower_count']
+  followers_B = random_B['follower_count']
+
+  is_correct = check_answer(guess, followers_A, followers_B)
+  if is_correct:
     score += 1
     start_game(score, random_B, choice(data))
   else:
